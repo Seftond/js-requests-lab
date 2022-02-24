@@ -2,6 +2,12 @@
 //THE TEST SERVER IS RUNNING ON LOCALHOST:3000//
 ////////////////////////////////////////////////
 
+
+
+
+
+// const { default: axios } = require("axios");
+
 // PROBLEM 1
 /*
     In the index.html file in this folder there is a button with an id of 'say-hello-button'!
@@ -10,6 +16,7 @@
 */
 
 // CODE HERE
+sayHelloButton = document.querySelector("#say-hello-button");
 
 
 // PROBLEM 2
@@ -20,7 +27,11 @@
 */
 
 // CODE HERE
-
+function helloButtonChange(){
+    sayHelloButton.style.backgroundColor = "black";
+    sayHelloButton.style.color = "white";
+}
+sayHelloButton.onmouseover = helloButtonChange; 
 
 // PROBLEM 3
 /*
@@ -32,7 +43,12 @@
 */
 
 // CODE HERE
+function helloButtonChangeBack(){
+    sayHelloButton.style.backgroundColor = "#EFEFEF";
+    sayHelloButton.style.color = "black";
+}
 
+sayHelloButton.addEventListener('mouseout', helloButtonChangeBack)
 
 // PROBLEM 4
 /*
@@ -53,7 +69,7 @@ const sayHello = () => {
 // DO NOT EDIT FUNCTION
 
 // CODE HERE
-
+sayHelloButton.addEventListener('click', sayHello)
 
 // PROBLEM 5 
 /*
@@ -67,7 +83,14 @@ const sayHello = () => {
 */ 
 
 const ohMy = () => {
-    // YOUR CODE HERE
+    axios.get("http://localhost:3000/animals")
+    .then((response) => {
+        for(let i = 0; i < response.data.length; i++){
+            let newElement = document.createElement('p')
+            newElement.textContent = response.data[i]
+            document.body.appendChild(newElement)
+        }
+    })
 }
 
 document.getElementById('animals-button').addEventListener('click', ohMy)
@@ -87,8 +110,15 @@ document.getElementById('animals-button').addEventListener('click', ohMy)
 */
 
 const repeatMyParam = () => {
-    //YOUR CODE HERE
+    axios.get(`http://localhost:3000/repeat/zebra`)
+    .then ((response) => {
+        console.log(response.data)
+        let repeatText = document.querySelector("#repeat-text")
+        repeatText.textContent = response.data
+    })
 }
+document.querySelector("#repeat-button").addEventListener('click', repeatMyParam)
+
 
 // PROBLEM 7
 /*
@@ -111,7 +141,12 @@ const repeatMyParam = () => {
 */
 
 // CODE HERE
+function makeQuery(){
+    axios.get('http://localhost:3000/query-test/?animals=Lions/animals=zebra')
+    .then((response) => console.log(response.data))
+}
 
+document.querySelector("#query-button").addEventListener('click', makeQuery)
 
 
 ////////////////
@@ -164,3 +199,19 @@ const repeatMyParam = () => {
 */
 
 // CODE HERE 
+function createFood(event){
+    event.preventDefault()
+    let foodInput = document.getElementById("input-form");
+    const body = {
+        newFood: foodInput.value
+    };
+    axios.post("http://localhost:3000/food", body)
+    .then((response) => {
+        console.log(response.data[0])
+        let newElement = document.createElement('p')
+        newElement.textContent = response.data
+        document.body.appendChild(newElement)
+    })
+}
+
+document.getElementById("input-button").addEventListener('click', createFood)
